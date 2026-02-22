@@ -9,6 +9,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 public class ClientService {
 
@@ -19,5 +21,11 @@ public class ClientService {
     public Page<ClientDTO> findAll(Pageable pageable){
         Page<Client> result = clientRepository.findAll(pageable);
         return result.map(ClientDTO::new);
+    }
+
+    @Transactional(readOnly = true)
+    public ClientDTO findById(Long id){
+        Optional<Client> client = clientRepository.findById(id);
+        return new ClientDTO(client.get());
     }
 }

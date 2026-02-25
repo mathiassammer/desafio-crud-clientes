@@ -3,11 +3,9 @@ package com.mathiassammer.dscrudclientes.services;
 import com.mathiassammer.dscrudclientes.dto.ClientDTO;
 import com.mathiassammer.dscrudclientes.entities.Client;
 import com.mathiassammer.dscrudclientes.repositories.ClientRepository;
-import com.mathiassammer.dscrudclientes.services.exceptions.DatabaseException;
 import com.mathiassammer.dscrudclientes.services.exceptions.ResourceNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -59,11 +57,8 @@ public class ClientService {
         if (!clientRepository.existsById(id)) {
             throw new ResourceNotFoundException("Recurso não encontrado");
         }
-        try {
-            clientRepository.deleteById(id);
-        } catch (DataIntegrityViolationException e) {
-            throw new DatabaseException("Falha de integridade referencial");
-        }
+
+        clientRepository.deleteById(id);
     }
 
     private void copyDtoToEntity(ClientDTO dto, Client entity) {

@@ -2,6 +2,7 @@ package com.mathiassammer.dscrudclientes.controllers;
 
 import com.mathiassammer.dscrudclientes.dto.ClientDTO;
 import com.mathiassammer.dscrudclientes.services.ClientService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +24,7 @@ public class ClientController {
     public ResponseEntity<PagedModel<ClientDTO>> findAll(Pageable pageable) {
         Page<ClientDTO> dto = clientService.findAll(pageable);
         return ResponseEntity.ok(new PagedModel<>(dto));
+        // Retornando na estrutura PagedModel por recomendação da IDE
     }
 
     @GetMapping("/{id}")
@@ -32,14 +34,14 @@ public class ClientController {
     }
 
     @PostMapping
-    public ResponseEntity<ClientDTO> insert(@RequestBody ClientDTO dto) {
+    public ResponseEntity<ClientDTO> insert(@Valid @RequestBody ClientDTO dto) {
         dto = clientService.insert(dto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.getId()).toUri();
         return ResponseEntity.created(uri).body(dto);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ClientDTO> update(@PathVariable Long id, @RequestBody ClientDTO dto) {
+    public ResponseEntity<ClientDTO> update(@PathVariable Long id, @Valid @RequestBody ClientDTO dto) {
         dto = clientService.update(id, dto);
         return ResponseEntity.ok(dto);
     }
